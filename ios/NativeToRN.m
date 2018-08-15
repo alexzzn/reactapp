@@ -8,6 +8,6 @@
 
 #import "NativeToRN.h"
 
-@implementation NativeToRN
-
-@end
+//@implementation NativeToRN
+//
+//@end

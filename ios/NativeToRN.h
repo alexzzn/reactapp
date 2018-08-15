@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-@interface NativeToRN : NSObject<RCTBridgeModule>
-
-@end
+//
+//@interface NativeToRN : NSObject<RCTBridgeModule>
+//
+//@end

@@ -2,8 +2,17 @@ import { AppRegistry } from 'react-native';
 import App from './App';
 import HomePage from './src/controllers/Home'
 import MinePage from './src/controllers/Mine'
-import { StackNavigator, TabNavigator, TabBarItem, createBottomTabNavigator, createDrawerNavigator, createStackNavigator } from 'react-navigation'
-// AppRegistry.registerComponent('ReactApp', () => App);
+import {
+   StackNavigator, TabNavigator, 
+   TabBarItem, createBottomTabNavigator, 
+   createDrawerNavigator, createStackNavigator,
+   tabBarIcon,
+   tabBarLabel,
+   tabBarPosition,
+   Icon,
+   tabBarOnPress
+  } from 'react-navigation'
+AppRegistry.registerComponent('ReactApp', () => App);
 
 
 // const tab = createBottomTabNavigator({
@@ -45,26 +54,38 @@ const tab = StackNavigator(
   }
 )
 
+
 const tab2 = createBottomTabNavigator({
+
   Home: createStackNavigator({
     Home: {
       screen: HomePage,
+      navigationOptions:({navi}) => ({
+        tabBarLabel: "主页",
+        tabBarIcon:({tintColor,focused}) => (
+          <Icon
+            name={focused ? '主页灰.png':'主页灰.png'}
+            size={26}
+          />
+        ),
+        tabBarOnPress:(obj) => {
+          navi.navigate('HomePage')
+        }
+      })
     }
   }),
   Mine: createStackNavigator({
     Mine: MinePage
   })
 },{
-    navigationOptions: ({ navigation }) => ({
-      title: navigation.state.routeName,
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    })
+  tabBarOptions: {
+    showIcon: true
+  },
+  navigationOptions:({navi}) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+
+    },
+  })
 })
 
-AppRegistry.registerComponent('ReactApp', () => tab2);
+// AppRegistry.registerComponent('ReactApp', () => tab2);
