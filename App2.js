@@ -17,6 +17,10 @@ class HomeScreen extends React.Component {
           title='jump'
           onPress={() => this.props.navigation.push('Mine')}
         />
+        <Button
+          title='jump tab details'
+          onPress={() => this.props.navigation.navigate('Details')}
+        />
       </SafeAreaView>
     );
   }
