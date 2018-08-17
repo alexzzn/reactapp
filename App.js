@@ -124,38 +124,75 @@
 // });
 
 import React from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View, Text,Button } from 'react-native';
+import { View, Text, Button, Image, Icon, StyleSheet, SafeAreaView,StatusBar } from 'react-native';
 import { createStackNavigator,NavigationComponent,createBottomTabNavigator } from 'react-navigation'; // Version can be specified in package.json
-// https://reactnavigation.org/docs/zh-Hans/tab-based-navigation.html
+
+
+// 首页
 class HomeScreen extends React.Component {
+
+  static navigationOptions = ()=>({
+    title: "Home"
+  })
+  
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
         <Button
           title = "jump to Mine"
-          onPress={() => this.props.navigation.push('Mine',{
+          onPress={() => this.props.navigation.push('Details',{
             id:1
           })}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
+// 跳转页 details
+class DetailsScreen extends React.Component {
 
+  // static navigationOptions = ({ navigation }) => {
+
+  //   let tabBarVisible = false
+  //   return {
+  //     // 标题
+  //     title: "Details",
+  //     // 隐藏navbar
+  //     // header: null,
+  //     tabBarVisible
+  //   }
+  // }
+
+  render() {
+    let { navigation } = this.props;
+    let cusId = navigation.getParam('id', 'cusId')
+
+    return (
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="blue"
+        />
+        <Text>Mine Screen</Text>
+        <Text>传递ID参数: {cusId}</Text>
+      </SafeAreaView>
+    );
+  }
+
+}
+// 我的
 class MineScreen extends React.Component {
-  static navigationOptions = {
-    title: 'MineScreen',
-  };
+
   static navigationOptions = ({ navigation }) => {
     return {
       // 标题
-      title: navigation.getParam('otherParam'),
+      title: 'Mine',
       headerTintColor: 'blue',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+
       // left barItem
       headerRight: (
         <Button
@@ -168,9 +205,9 @@ class MineScreen extends React.Component {
   };
 
   // 组件挂载完成后，改动navigation，
-  componentDidMount() {
-    this.props.navigation.setParams({ increaseCount: this._increaseCount });
-  }
+  // componentDidMount() {
+  //   this.props.navigation.setParams({ increaseCount: this._increaseCount });
+  // }
 
   render() {
     let {navigation} = this.props;
@@ -179,56 +216,100 @@ class MineScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Mine Screen</Text>
-        <Text>传递ID参数: {cusId}</Text>
       </View>
     );
   }
 }
 
-// export default createStackNavigator({
-//   Home: {
-//     screen: HomeScreen,
-//     navigationOptions: () => ({
-//       title: 'Home',
-//     },{
-//       mode: 'modal',
-//       navigationOptions: {
-//         gesturesEnabled: true,
-//       },
-//     }),
-//   },
-//   Mine: {
-//     screen: MineScreen,
-//   }
-// },{
-//   initialRouteName: 'Home'
-// });
+const nav1 =  createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: () => ({
+      title: 'Home',
+      tabBarComponent:null
+    },{
+      mode: 'card',
+      navigationOptions: {
+        gesturesEnabled: true,
+      },
+    }),
+  },
+  Details: {
+    screen: DetailsScreen,
+  }
+},{
+  initialRouteName: 'Home'
+});
 
+
+const nav2 = createStackNavigator({
+
+  Mine: {
+      screen: MineScreen,
+    }
+  }, {
+    initialRouteName: 'Mine'
+});
 
 export default createBottomTabNavigator(
   {
-    Home: HomeScreen,
-    Mine: MineScreen,
+    Home:nav1,
+    Mine: nav2
   },
   {
+    // tabbar 配置
     navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'Home') {
-          iconName = `home_${focused ? 'n' : 's'}`;
-        } else if (routeName === 'Mine') {
-          iconName = `mine_${focused ? 'n' : 's'}`;
-        }
 
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+      tabBarVisible: navigation.state.index>0 ? false:true,
+      tabBarLabel: navigation.state.routeName,
+      tabBarIcon: ({ tintColor,focused }) => {
+        
+        let routeName = navigation.state.routeName
+        let soucrePath
+        if (routeName === 'Home') {
+          soucrePath = focused ? imageArr[1] : imageArr[0]
+          this.tabBarLabel = "主页"
+        } else if (routeName === 'Mine') {
+
+          soucrePath = focused ? imageArr[3] : imageArr[2]
+          this.tabBarLabel = "我的"
+        }
+        
+        return <Image
+          style={[{ width: 24, height: 24 }]}
+          source={soucrePath}
+        />
+
       },
     }),
     tabBarOptions: {
       activeTintColor: 'tomato',
       inactiveTintColor: 'gray',
+      showIcon: true
     },
   }
 );
+
+const imageArr = [
+  require('./src/res/images/home_n.png'),
+  require('./src/res/images/home_s.png'),
+  require('./src/res/images/mine_n.png'),
+  require('./src/res/images/mine_s.png')
+]
+
+
+// const styles = StyleSheet.create({
+//   tabBarImage: {
+//     width: 24,
+//     height: 24,
+//   },
+//   tabBar: {
+//     backgroundColor: 'white',
+//   },
+//   tabBarLabel: {
+//     fontSize: 12,
+//   },
+//   tabBarItem: {
+//     height: 56,
+//   },
+// })

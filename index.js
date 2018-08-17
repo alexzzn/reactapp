@@ -2,6 +2,7 @@ import { AppRegistry } from 'react-native';
 import App from './App';
 import HomePage from './src/controllers/Home'
 import MinePage from './src/controllers/Mine'
+import { AppNavigator, MainStack } from './App2'
 import {
    StackNavigator, TabNavigator, 
    TabBarItem, createBottomTabNavigator, 
@@ -12,8 +13,8 @@ import {
    Icon,
    tabBarOnPress
   } from 'react-navigation'
-AppRegistry.registerComponent('ReactApp', () => App);
-
+AppRegistry.registerComponent('ReactApp', () => MainStack);
+// AppRegistry.registerComponent('ReactApp', () => App);
 
 // const tab = createBottomTabNavigator({
 
